@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online health calculators - BMI, Ideal Weight, Calories, Body Fat, Water Intake. Track your health easily with accurate calculators.">
+  <title>Health Calculators Hub - Free BMI, Weight, Calorie Calculators Online</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .gradient-bg { background: linear-gradient(135deg, #0d9488 0%, #14b8a6 50%, #2dd4bf 100%); }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(13, 148, 136, 0.15); }
+    .btn-pulse { animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.4); }
+      50% { box-shadow: 0 0 0 10px rgba(13, 148, 136, 0); }
+    }
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px;
+      background: #0d9488; transition: width 0.3s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+    .page { display: none; }
+    .page.active { display: block; }
+    .result-card { animation: slideIn 0.4s ease; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-slate-50 text-slate-800">
+  <div id="app-wrapper" class="w-full h-full overflow-auto">
+   <!-- Navigation -->
+   <header class="bg-white shadow-sm sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="flex justify-between items-center h-16">
+      <a href="#" onclick="navigateTo('home')" class="flex items-center gap-2 cursor-pointer">
+       <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+       </div><span id="site-title" class="text-xl font-bold text-slate-800">Health Calculators Hub</span> </a>
+      <div class="hidden md:flex items-center gap-6">
+       <a href="#" onclick="navigateTo('home')" class="nav-link text-slate-600 hover:text-teal-600 font-medium">Home</a>
+       <div class="relative group">
+        <button class="nav-link text-slate-600 hover:text-teal-600 font-medium flex items-center gap-1"> Calculators 
+         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+         </svg></button>
+        <div class="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 py-2">
+         <a href="#" onclick="navigateTo('bmi')" class="block px-4 py-2 text-slate-600 hover:bg-teal-50 hover:text-teal-600">BMI Calculator</a> <a href="#" onclick="navigateTo('weight')" class="block px-4 py-2 text-slate-600 hover:bg-teal-50 hover:text-teal-600">Ideal Weight Calculator</a> <a href="#" onclick="navigateTo('calorie')" class="block px-4 py-2 text-slate-600 hover:bg-teal-50 hover:text-teal-600">Calorie Calculator</a> <a href="#" onclick="navigateTo('bodyfat')" class="block px-4 py-2 text-slate-600 hover:bg-teal-50 hover:text-teal-600">Body Fat Calculator</a> <a href="#" onclick="navigateTo('water')" class="block px-4 py-2 text-slate-600 hover:bg-teal-50 hover:text-teal-600">Water Intake Calculator</a>
+        </div>
+       </div><a href="#" onclick="navigateTo('blog')" class="nav-link text-slate-600 hover:text-teal-600 font-medium">Blog</a> <a href="#" onclick="navigateTo('about')" class="nav-link text-slate-600 hover:text-teal-600 font-medium">About</a> <a href="#" onclick="navigateTo('contact')" class="nav-link text-slate-600 hover:text-teal-600 font-medium">Contact</a>
+      </div><button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg hover:bg-slate-100">
+       <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+       </svg></button>
+     </div><!-- Mobile Menu -->
+     <div id="mobile-menu" class="hidden md:hidden pb-4">
+      <a href="#" onclick="navigateTo('home')" class="block py-2 text-slate-600 hover:text-teal-600">Home</a> <a href="#" onclick="navigateTo('bmi')" class="block py-2 text-slate-600 hover:text-teal-600">BMI Calculator</a> <a href="#" onclick="navigateTo('weight')" class="block py-2 text-slate-600 hover:text-teal-600">Ideal Weight Calculator</a> <a href="#" onclick="navigateTo('calorie')" class="block py-2 text-slate-600 hover:text-teal-600">Calorie Calculator</a> <a href="#" onclick="navigateTo('bodyfat')" class="block py-2 text-slate-600 hover:text-teal-600">Body Fat Calculator</a> <a href="#" onclick="navigateTo('water')" class="block py-2 text-slate-600 hover:text-teal-600">Water Intake Calculator</a> <a href="#" onclick="navigateTo('blog')" class="block py-2 text-slate-600 hover:text-teal-600">Blog</a> <a href="#" onclick="navigateTo('about')" class="block py-2 text-slate-600 hover:text-teal-600">About</a> <a href="#" onclick="navigateTo('contact')" class="block py-2 text-slate-600 hover:text-teal-600">Contact</a>
+     </div>
+    </nav>
+   </header>
+   <main>
+    <!-- HOME PAGE -->
+    <section id="page-home" class="page active">
+     <!-- Hero Section -->
+     <div class="gradient-bg py-16 md:py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+       <h1 id="hero-heading" class="text-3xl md:text-5xl font-extrabold text-white mb-6 leading-tight">Free Health Calculators Online<br class="hidden md:block">
+         BMI, Weight, Calories, Body Fat, Water Intake</h1>
+       <p id="hero-subheading" class="text-lg md:text-xl text-teal-100 mb-8 max-w-2xl mx-auto">Track your health easily with these free calculators. Get accurate results instantly.</p>
+       <div class="flex flex-wrap justify-center gap-4">
+        <button onclick="navigateTo('bmi')" class="bg-white text-teal-600 px-6 py-3 rounded-xl font-semibold hover:bg-teal-50 transition shadow-lg btn-pulse"> Try BMI Calculator </button> <button onclick="document.getElementById('tools-section').scrollIntoView({behavior:'smooth'})" class="border-2 border-white text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/10 transition"> View All Tools </button>
+       </div>
+      </div>
+     </div><!-- Calculator Cards Section -->
+     <div id="tools-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="text-center mb-12">
+       <h2 class="text-3xl font-bold text-slate-800 mb-4">Our Health Calculators</h2>
+       <p class="text-slate-600 max-w-2xl mx-auto">Choose from our collection of accurate, easy-to-use health calculators</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+       <!-- BMI Card -->
+       <div class="bg-white rounded-2xl p-6 shadow-lg card-hover border border-slate-100">
+        <div class="w-14 h-14 bg-teal-100 rounded-xl flex items-center justify-center mb-4">
+         <svg class="w-7 h-7 text-teal-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+         </svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">BMI Calculator</h3>
+        <p class="text-slate-600 mb-4">Check your Body Mass Index quickly and accurately.</p><button onclick="navigateTo('bmi')" class="w-full bg-teal-600 text-white py-3 rounded-xl font-semibold hover:bg-teal-700 transition"> Calculate BMI Now → </button>
+       </div><!-- Ideal Weight Card -->
+       <div class="bg-white rounded-2xl p-6 shadow-lg card-hover border border-slate-100">
+        <div class="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center mb-4">
+         <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+         </svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">Ideal Weight Calculator</h3>
+        <p class="text-slate-600 mb-4">Find your healthy weight range based on your height.</p><button onclick="navigateTo('weight')" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition"> Calculate Ideal Weight Now → </button>
+       </div><!-- Calorie Card -->
+       <div class="bg-white rounded-2xl p-6 shadow-lg card-hover border border-slate-100">
+        <div class="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
+         <svg class="w-7 h-7 text-orange-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
+         </svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">Calorie Calculator</h3>
+        <p class="text-slate-600 mb-4">Know your daily calorie needs based on activity level.</p><button onclick="navigateTo('calorie')" class="w-full bg-orange-600 text-white py-3 rounded-xl font-semibold hover:bg-orange-700 transition"> Calculate Calories Now → </button>
+       </div><!-- Body Fat Card -->
+       <div class="bg-white rounded-2xl p-6 shadow-lg card-hover border border-slate-100">
+        <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+         <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+         </svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">Body Fat Calculator</h3>
+        <p class="text-slate-600 mb-4">Measure your body fat percentage easily.</p><button onclick="navigateTo('bodyfat')" class="w-full bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition"> Calculate Body Fat Now → </button>
+       </div><!-- Water Intake Card -->
+       <div class="bg-white rounded-2xl p-6 shadow-lg card-hover border border-slate-100">
+        <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+         <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+         </svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">Water Intake Calculator</h3>
+        <p class="text-slate-600 mb-4">Track how much water you should drink daily.</p><button onclick="navigateTo('water')" class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition"> Calculate Water Intake Now → </button>
+       </div><!-- Why Use Card -->
+       <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 shadow-lg card-hover text-white">
+        <div class="w-14 h-14 bg-white/10 rounded-xl flex items-center justify-center mb-4">
+         <svg class="w-7 h-7 text-teal-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+         </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-2">Why Use Our Calculators?</h3>
+        <ul class="text-slate-300 space-y-2 text-sm">
+         <li class="flex items-center gap-2"><span class="text-teal-400">✓</span> 100% Free &amp; No Registration</li>
+         <li class="flex items-center gap-2"><span class="text-teal-400">✓</span> Science-Based Formulas</li>
+         <li class="flex items-center gap-2"><span class="text-teal-400">✓</span> Instant Results</li>
+         <li class="flex items-center gap-2"><span class="text-teal-400">✓</span> Privacy Protected</li>
+        </ul>
+       </div>
+      </div>
+     </div><!-- Recent Blog Posts -->
+     <div class="bg-white py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-slate-800 mb-4">Health Tips &amp; Guides</h2>
+        <p class="text-slate-600">Learn more about health metrics and how to improve your wellness</p>
+       </div>
+       <div class="grid md:grid-cols-3 gap-6">
+        <article class="group cursor-pointer" onclick="navigateTo('blog')">
+         <div class="bg-gradient-to-br from-teal-500 to-teal-600 h-40 rounded-xl mb-4 flex items-center justify-center group-hover:scale-105 transition">
+          <span class="text-5xl">📊</span>
+         </div>
+         <h3 class="font-bold text-slate-800 mb-2 group-hover:text-teal-600 transition">How to Calculate BMI Online</h3>
+         <p class="text-slate-600 text-sm">A complete guide to understanding and calculating your Body Mass Index...</p>
+        </article>
+        <article class="group cursor-pointer" onclick="navigateTo('blog')">
+         <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 h-40 rounded-xl mb-4 flex items-center justify-center group-hover:scale-105 transition">
+          <span class="text-5xl">⚖️</span>
+         </div>
+         <h3 class="font-bold text-slate-800 mb-2 group-hover:text-teal-600 transition">Ideal Weight Calculator Tips</h3>
+         <p class="text-slate-600 text-sm">Discover the factors that determine your ideal weight and how to achieve it...</p>
+        </article>
+        <article class="group cursor-pointer" onclick="navigateTo('blog')">
+         <div class="bg-gradient-to-br from-blue-500 to-blue-600 h-40 rounded-xl mb-4 flex items-center justify-center group-hover:scale-105 transition">
+          <span class="text-5xl">💧</span>
+         </div>
+         <h3 class="font-bold text-slate-800 mb-2 group-hover:text-teal-600 transition">Track Water Intake Online</h3>
+         <p class="text-slate-600 text-sm">Learn why hydration matters and how to ensure you're drinking enough water...</p>
+        </article>
+       </div>
+      </div>
+     </div>
+    </section><!-- BMI CALCULATOR PAGE -->
+    <section id="page-bmi" class="page">
+     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <nav class="text-sm mb-6">
+       <a href="#" onclick="navigateTo('home')" class="text-teal-600 hover:underline">Home</a> <span class="mx-2 text-slate-400">/</span> <span class="text-slate-600">BMI Calculator</span>
+      </nav>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">BMI Calculator Online</h1>
+      <p class="text-lg text-slate-600 mb-8">Check your Body Mass Index quickly. BMI is a widely used measure to assess if you're at a healthy weight for your height.</p>
+      <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+       <form id="bmi-form" onsubmit="calculateBMI(event)">
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+         <div>
+          <label for="bmi-height" class="block text-sm font-semibold text-slate-700 mb-2">Height (cm)</label> <input type="number" id="bmi-height" placeholder="e.g., 175" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+         </div>
+         <div>
+          <label for="bmi-weight" class="block text-sm font-semibold text-slate-700 mb-2">Weight (kg)</label> <input type="number" id="bmi-weight" placeholder="e.g., 70" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+         </div>
+        </div><button type="submit" class="w-full bg-teal-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-teal-700 transition shadow-lg"> Calculate BMI Now </button>
+       </form>
+       <div id="bmi-result" class="hidden mt-8"></div>
+      </div>
+      <div class="mt-12 prose prose-slate max-w-none">
+       <h2 class="text-2xl font-bold text-slate-800 mb-4">Understanding BMI</h2>
+       <p class="text-slate-600 mb-4">Body Mass Index (BMI) is calculated by dividing your weight in kilograms by your height in meters squared. It provides a quick assessment of body fat based on height and weight.</p>
+       <h3 class="text-xl font-bold text-slate-800 mb-3">BMI Categories:</h3>
+       <ul class="space-y-2 text-slate-600">
+        <li><strong>Underweight:</strong> BMI less than 18.5</li>
+        <li><strong>Normal weight:</strong> BMI 18.5 to 24.9</li>
+        <li><strong>Overweight:</strong> BMI 25 to 29.9</li>
+        <li><strong>Obese:</strong> BMI 30 or greater</li>
+       </ul>
+      </div>
+     </div>
+    </section><!-- IDEAL WEIGHT CALCULATOR PAGE -->
+    <section id="page-weight" class="page">
+     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <nav class="text-sm mb-6">
+       <a href="#" onclick="navigateTo('home')" class="text-teal-600 hover:underline">Home</a> <span class="mx-2 text-slate-400">/</span> <span class="text-slate-600">Ideal Weight Calculator</span>
+      </nav>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">Ideal Weight Calculator Free</h1>
+      <p class="text-lg text-slate-600 mb-8">Find your healthy weight range based on your height and gender using multiple scientific formulas.</p>
+      <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+       <form id="weight-form" onsubmit="calculateIdealWeight(event)">
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+         <div>
+          <label for="iw-height" class="block text-sm font-semibold text-slate-700 mb-2">Height (cm)</label> <input type="number" id="iw-height" placeholder="e.g., 175" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+         </div>
+         <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Gender</label>
+          <div class="flex gap-4">
+           <label class="flex items-center gap-2 cursor-pointer"> <input type="radio" name="iw-gender" value="male" checked class="w-4 h-4 text-emerald-600"> <span>Male</span> </label> <label class="flex items-center gap-2 cursor-pointer"> <input type="radio" name="iw-gender" value="female" class="w-4 h-4 text-emerald-600"> <span>Female</span> </label>
+          </div>
+         </div>
+        </div><button type="submit" class="w-full bg-emerald-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-emerald-700 transition shadow-lg"> Calculate Ideal Weight Now </button>
+       </form>
+       <div id="weight-result" class="hidden mt-8"></div>
+      </div>
+      <div class="mt-12 prose prose-slate max-w-none">
+       <h2 class="text-2xl font-bold text-slate-800 mb-4">About Ideal Weight Formulas</h2>
+       <p class="text-slate-600">This calculator uses multiple established formulas including the Devine formula, Robinson formula, Miller formula, and Hamwi formula to give you a comprehensive view of your ideal weight range.</p>
+      </div>
+     </div>
+    </section><!-- CALORIE CALCULATOR PAGE -->
+    <section id="page-calorie" class="page">
+     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <nav class="text-sm mb-6">
+       <a href="#" onclick="navigateTo('home')" class="text-teal-600 hover:underline">Home</a> <span class="mx-2 text-slate-400">/</span> <span class="text-slate-600">Calorie Calculator</span>
+      </nav>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">Daily Calorie Calculator Online</h1>
+      <p class="text-lg text-slate-600 mb-8">Know your daily calorie needs based on activity level. Calculate your Total Daily Energy Expenditure (TDEE).</p>
+      <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+       <form id="calorie-form" onsubmit="calculateCalories(event)">
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+         <div>
+          <label for="cal-age" class="block text-sm font-semibold text-slate-700 mb-2">Age (years)</label> <input type="number" id="cal-age" placeholder="e.g., 30" required min="15" max="100" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
+         </div>
+         <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Gender</label>
+          <div class="flex gap-4">
+           <label class="flex items-center gap-2 cursor-pointer"> <input type="radio" name="cal-gender" value="male" checked class="w-4 h-4 text-orange-600"> <span>Male</span> </label> <label class="flex items-center gap-2 cursor-pointer"> <input type="radio" name="cal-gender" value="female" class="w-4 h-4 text-orange-600"> <span>Female</span> </label>
+          </div>
+         </div>
+         <div>
+          <label for="cal-height" class="block text-sm font-semibold text-slate-700 mb-2">Height (cm)</label> <input type="number" id="cal-height" placeholder="e.g., 175" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
+         </div>
+         <div>
+          <label for="cal-weight" class="block text-sm font-semibold text-slate-700 mb-2">Weight (kg)</label> <input type="number" id="cal-weight" placeholder="e.g., 70" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
+         </div>
+        </div>
+        <div class="mb-6">
+         <label for="cal-activity" class="block text-sm font-semibold text-slate-700 mb-2">Activity Level</label> <select id="cal-activity" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"> <option value="1.2">Sedentary (little or no exercise)</option> <option value="1.375">Lightly active (light exercise 1-3 days/week)</option> <option value="1.55" selected>Moderately active (moderate exercise 3-5 days/week)</option> <option value="1.725">Very active (hard exercise 6-7 days/week)</option> <option value="1.9">Extra active (very hard exercise &amp; physical job)</option> </select>
+        </div><button type="submit" class="w-full bg-orange-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-700 transition shadow-lg"> Calculate Calories Now </button>
+       </form>
+       <div id="calorie-result" class="hidden mt-8"></div>
+      </div>
+     </div>
+    </section><!-- BODY FAT CALCULATOR PAGE -->
+    <section id="page-bodyfat" class="page">
+     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <nav class="text-sm mb-6">
+       <a href="#" onclick="navigateTo('home')" class="text-teal-600 hover:underline">Home</a> <span class="mx-2 text-slate-400">/</span> <span class="text-slate-600">Body Fat Calculator</span>
+      </nav>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">Body Fat Calculator Online</h1>
+      <p class="text-lg text-slate-600 mb-8">Measure your body fat percentage easily using the U.S. Navy method.</p>
+      <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+       <form id="bodyfat-form" onsubmit="calculateBodyFat(event)">
+        <div class="mb-6">
+         <label class="block text-sm font-semibold text-slate-700 mb-2">Gender</label>
+         <div class="flex gap-4">
+          <label class="flex items-center gap-2 cursor-pointer"> <input type="radio" name="bf-gender" value="male" checked onchange="toggleBFFields()" class="w-4 h-4 text-purple-600"> <span>Male</span> </label> <label class="flex items-center gap-2 cursor-pointer"> <input type="radio" name="bf-gender" value="female" onchange="toggleBFFields()" class="w-4 h-4 text-purple-600"> <span>Female</span> </label>
+         </div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+         <div>
+          <label for="bf-height" class="block text-sm font-semibold text-slate-700 mb-2">Height (cm)</label> <input type="number" id="bf-height" placeholder="e.g., 175" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+         </div>
+         <div>
+          <label for="bf-neck" class="block text-sm font-semibold text-slate-700 mb-2">Neck Circumference (cm)</label> <input type="number" id="bf-neck" placeholder="e.g., 38" required step="0.1" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+         </div>
+         <div>
+          <label for="bf-waist" class="block text-sm font-semibold text-slate-700 mb-2">Waist Circumference (cm)</label> <input type="number" id="bf-waist" placeholder="e.g., 85" required step="0.1" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+         </div>
+         <div id="bf-hip-field" class="hidden">
+          <label for="bf-hip" class="block text-sm font-semibold text-slate-700 mb-2">Hip Circumference (cm)</label> <input type="number" id="bf-hip" placeholder="e.g., 100" step="0.1" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+         </div>
+        </div><button type="submit" class="w-full bg-purple-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-purple-700 transition shadow-lg"> Calculate Body Fat Now </button>
+       </form>
+       <div id="bodyfat-result" class="hidden mt-8"></div>
+      </div>
+      <div class="mt-12 prose prose-slate max-w-none">
+       <h2 class="text-2xl font-bold text-slate-800 mb-4">Body Fat Categories</h2>
+       <div class="grid md:grid-cols-2 gap-6">
+        <div>
+         <h3 class="text-lg font-bold text-slate-800 mb-2">Men</h3>
+         <ul class="text-slate-600 space-y-1">
+          <li>Essential fat: 2-5%</li>
+          <li>Athletes: 6-13%</li>
+          <li>Fitness: 14-17%</li>
+          <li>Average: 18-24%</li>
+          <li>Obese: 25%+</li>
+         </ul>
+        </div>
+        <div>
+         <h3 class="text-lg font-bold text-slate-800 mb-2">Women</h3>
+         <ul class="text-slate-600 space-y-1">
+          <li>Essential fat: 10-13%</li>
+          <li>Athletes: 14-20%</li>
+          <li>Fitness: 21-24%</li>
+          <li>Average: 25-31%</li>
+          <li>Obese: 32%+</li>
+         </ul>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section><!-- WATER INTAKE CALCULATOR PAGE -->
+    <section id="page-water" class="page">
+     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <nav class="text-sm mb-6">
+       <a href="#" onclick="navigateTo('home')" class="text-teal-600 hover:underline">Home</a> <span class="mx-2 text-slate-400">/</span> <span class="text-slate-600">Water Intake Calculator</span>
+      </nav>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">Water Intake Calculator</h1>
+      <p class="text-lg text-slate-600 mb-8">Track how much water you should drink daily based on your weight and activity level.</p>
+      <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+       <form id="water-form" onsubmit="calculateWater(event)">
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+         <div>
+          <label for="water-weight" class="block text-sm font-semibold text-slate-700 mb-2">Weight (kg)</label> <input type="number" id="water-weight" placeholder="e.g., 70" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+         </div>
+         <div>
+          <label for="water-activity" class="block text-sm font-semibold text-slate-700 mb-2">Activity Level</label> <select id="water-activity" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"> <option value="1">Sedentary (no exercise)</option> <option value="1.2" selected>Light activity</option> <option value="1.4">Moderate activity</option> <option value="1.6">High activity</option> <option value="1.8">Very high activity</option> </select>
+         </div>
+        </div>
+        <div class="mb-6">
+         <label for="water-climate" class="block text-sm font-semibold text-slate-700 mb-2">Climate</label> <select id="water-climate" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"> <option value="1">Temperate</option> <option value="1.1">Warm</option> <option value="1.2">Hot / Humid</option> </select>
+        </div><button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition shadow-lg"> Calculate Water Intake Now </button>
+       </form>
+       <div id="water-result" class="hidden mt-8"></div>
+      </div>
+      <div class="mt-12 prose prose-slate max-w-none">
+       <h2 class="text-2xl font-bold text-slate-800 mb-4">Benefits of Proper Hydration</h2>
+       <ul class="text-slate-600 space-y-2">
+        <li>✓ Improves physical performance</li>
+        <li>✓ Boosts energy and brain function</li>
+        <li>✓ Helps with weight management</li>
+        <li>✓ Supports kidney function</li>
+        <li>✓ Promotes healthy skin</li>
+       </ul>
+      </div>
+     </div>
+    </section><!-- BLOG PAGE -->
+    <section id="page-blog" class="page">
+     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">Health Tips &amp; Guides</h1>
+      <p class="text-lg text-slate-600 mb-8">Expert advice and guides on health metrics and wellness</p>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+       <article class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+        <div class="bg-gradient-to-br from-teal-500 to-teal-600 h-48 flex items-center justify-center">
+         <span class="text-6xl">📊</span>
+        </div>
+        <div class="p-6">
+         <span class="text-xs font-semibold text-teal-600 bg-teal-50 px-3 py-1 rounded-full">BMI</span>
+         <h2 class="text-xl font-bold text-slate-800 mt-3 mb-2">How to Calculate BMI Online</h2>
+         <p class="text-slate-600 mb-4">Learn everything about BMI calculation, what it means, and how to interpret your results for better health decisions.</p><a href="#" onclick="navigateTo('bmi')" class="text-teal-600 font-semibold hover:underline">Read More →</a>
+        </div>
+       </article>
+       <article class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+        <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 h-48 flex items-center justify-center">
+         <span class="text-6xl">⚖️</span>
+        </div>
+        <div class="p-6">
+         <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">Weight</span>
+         <h2 class="text-xl font-bold text-slate-800 mt-3 mb-2">Ideal Weight Calculator Tips</h2>
+         <p class="text-slate-600 mb-4">Discover different formulas for calculating ideal weight and understand which factors influence your optimal weight range.</p><a href="#" onclick="navigateTo('weight')" class="text-emerald-600 font-semibold hover:underline">Read More →</a>
+        </div>
+       </article>
+       <article class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+        <div class="bg-gradient-to-br from-orange-500 to-orange-600 h-48 flex items-center justify-center">
+         <span class="text-6xl">🔥</span>
+        </div>
+        <div class="p-6">
+         <span class="text-xs font-semibold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">Calories</span>
+         <h2 class="text-xl font-bold text-slate-800 mt-3 mb-2">Daily Calorie Calculator Online</h2>
+         <p class="text-slate-600 mb-4">Master the science of calorie counting. Learn about TDEE, BMR, and how activity level affects your daily energy needs.</p><a href="#" onclick="navigateTo('calorie')" class="text-orange-600 font-semibold hover:underline">Read More →</a>
+        </div>
+       </article>
+       <article class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+        <div class="bg-gradient-to-br from-purple-500 to-purple-600 h-48 flex items-center justify-center">
+         <span class="text-6xl">📏</span>
+        </div>
+        <div class="p-6">
+         <span class="text-xs font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Body Fat</span>
+         <h2 class="text-xl font-bold text-slate-800 mt-3 mb-2">Body Fat Calculator Online Guide</h2>
+         <p class="text-slate-600 mb-4">Understanding body fat percentage is crucial for fitness. Learn the Navy method and healthy ranges for men and women.</p><a href="#" onclick="navigateTo('bodyfat')" class="text-purple-600 font-semibold hover:underline">Read More →</a>
+        </div>
+       </article>
+       <article class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 h-48 flex items-center justify-center">
+         <span class="text-6xl">💧</span>
+        </div>
+        <div class="p-6">
+         <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">Hydration</span>
+         <h2 class="text-xl font-bold text-slate-800 mt-3 mb-2">Track Water Intake Online</h2>
+         <p class="text-slate-600 mb-4">Proper hydration is essential for health. Learn how to calculate your optimal daily water intake based on various factors.</p><a href="#" onclick="navigateTo('water')" class="text-blue-600 font-semibold hover:underline">Read More →</a>
+        </div>
+       </article>
+       <article class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+        <div class="bg-gradient-to-br from-slate-600 to-slate-800 h-48 flex items-center justify-center">
+         <span class="text-6xl">💪</span>
+        </div>
+        <div class="p-6">
+         <span class="text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1 rounded-full">Fitness</span>
+         <h2 class="text-xl font-bold text-slate-800 mt-3 mb-2">Complete Health Metrics Guide</h2>
+         <p class="text-slate-600 mb-4">A comprehensive overview of all health metrics and how they work together to give you a complete picture of your fitness.</p><a href="#" onclick="navigateTo('home')" class="text-slate-600 font-semibold hover:underline">Read More →</a>
+        </div>
+       </article>
+      </div>
+     </div>
+    </section><!-- ABOUT PAGE -->
+    <section id="page-about" class="page">
+     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">About Health Calculators Hub</h1>
+      <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+       <div class="prose prose-slate max-w-none">
+        <p class="text-lg text-slate-600 mb-6">Health Calculators Hub is your trusted source for free, accurate health and fitness calculators. Our mission is to help you understand your body better and make informed decisions about your health.</p>
+        <h2 class="text-2xl font-bold text-slate-800 mb-4">Our Mission</h2>
+        <p class="text-slate-600 mb-6">We believe everyone deserves access to accurate health information. Our calculators use scientifically validated formulas and are completely free to use, with no registration required.</p>
+        <h2 class="text-2xl font-bold text-slate-800 mb-4">Why Choose Us?</h2>
+        <ul class="text-slate-600 space-y-2 mb-6">
+         <li>✓ <strong>Science-Based:</strong> All calculations use peer-reviewed formulas</li>
+         <li>✓ <strong>Free Forever:</strong> No hidden costs or premium features</li>
+         <li>✓ <strong>Privacy First:</strong> We don't store or share your data</li>
+         <li>✓ <strong>Easy to Use:</strong> Simple, intuitive interface</li>
+         <li>✓ <strong>Educational:</strong> Learn what your results mean</li>
+        </ul>
+        <h2 class="text-2xl font-bold text-slate-800 mb-4">Disclaimer</h2>
+        <p class="text-slate-600">Our calculators are for informational purposes only and should not replace professional medical advice. Always consult with a healthcare provider for personalized guidance.</p>
+       </div>
+      </div>
+     </div>
+    </section><!-- CONTACT PAGE -->
+    <section id="page-contact" class="page">
+     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">Contact Us</h1>
+      <p class="text-lg text-slate-600 mb-8">Have questions or feedback? We'd love to hear from you.</p>
+      <div class="bg-white rounded-2xl shadow-xl p-8">
+       <form id="contact-form" onsubmit="submitContact(event)">
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+         <div>
+          <label for="contact-name" class="block text-sm font-semibold text-slate-700 mb-2">Name</label> <input type="text" id="contact-name" placeholder="Your name" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+         </div>
+         <div>
+          <label for="contact-email" class="block text-sm font-semibold text-slate-700 mb-2">Email</label> <input type="email" id="contact-email" placeholder="your@email.com" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+         </div>
+        </div>
+        <div class="mb-6">
+         <label for="contact-subject" class="block text-sm font-semibold text-slate-700 mb-2">Subject</label> <input type="text" id="contact-subject" placeholder="What's this about?" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition">
+        </div>
+        <div class="mb-6">
+         <label for="contact-message" class="block text-sm font-semibold text-slate-700 mb-2">Message</label> <textarea id="contact-message" rows="5" placeholder="Your message..." required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition resize-none"></textarea>
+        </div><button type="submit" class="w-full bg-teal-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-teal-700 transition shadow-lg"> Send Message </button>
+       </form>
+       <div id="contact-success" class="hidden mt-6 p-4 bg-teal-50 border border-teal-200 rounded-xl text-teal-700 text-center">
+        Thank you for your message! We'll get back to you soon.
+       </div>
+      </div>
+     </div>
+    </section><!-- PRIVACY PAGE -->
+    <section id="page-privacy" class="page">
+     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">Privacy Policy</h1>
+      <div class="bg-white rounded-2xl shadow-xl p-8 prose prose-slate max-w-none">
+       <p class="text-slate-600 mb-4"><strong>Last updated:</strong> January 2026</p>
+       <h2 class="text-xl font-bold text-slate-800 mt-6 mb-3">Information We Collect</h2>
+       <p class="text-slate-600 mb-4">Our calculators process your input locally in your browser. We do not collect, store, or transmit any personal health data to our servers.</p>
+       <h2 class="text-xl font-bold text-slate-800 mt-6 mb-3">How We Use Information</h2>
+       <p class="text-slate-600 mb-4">Any data you enter into our calculators is used solely to provide you with results. This data is not saved once you leave the page.</p>
+       <h2 class="text-xl font-bold text-slate-800 mt-6 mb-3">Cookies</h2>
+       <p class="text-slate-600 mb-4">We may use essential cookies to improve your browsing experience. These cookies do not track personal information.</p>
+       <h2 class="text-xl font-bold text-slate-800 mt-6 mb-3">Third-Party Services</h2>
+       <p class="text-slate-600 mb-4">We may use analytics services to understand how visitors use our site. These services collect anonymous usage data only.</p>
+       <h2 class="text-xl font-bold text-slate-800 mt-6 mb-3">Contact Us</h2>
+       <p class="text-slate-600">If you have questions about this policy, please contact us through our contact page.</p>
+      </div>
+     </div>
+    </section><!-- TERMS PAGE -->
+    <section id="page-terms" class="page">
+     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">Terms of Service</h1>
+      <div class="bg-white rounded-2xl shadow-xl p-8 prose prose-slate max-w-none">
+       <p class="text-slate-600 mb-4"><strong>Last updated:</strong> January 2026</p>
+       <h2 class="text-xl font-bold text-slate-800 mt-6 mb-3">Acceptance of Terms</h2>
+       <p class="text-slate-600 mb-4">By using Health Calculators Hub, you agree to these terms of service.</p>
+       <h2 class="text-xl font-bold text-slate-800 mt-6 mb-3">Use of Service</h2>
+       <p class="text-slate-600 mb-4">Our calculators are provided for informational purposes only. Results should not be considered medical advice.</p>
+       <h2 class="text-xl font-bold text-slate-800 mt-6 mb-3">Disclaimer</h2>
+       <p class="text-slate-600 mb-4">We make no warranties about the accuracy or completeness of information provided. Always consult healthcare professionals for medical decisions.</p>
+       <h2 class="text-xl font-bold text-slate-800 mt-6 mb-3">Limitation of Liability</h2>
+       <p class="text-slate-600 mb-4">We are not liable for any damages arising from the use of our calculators or reliance on their results.</p>
+       <h2 class="text-xl font-bold text-slate-800 mt-6 mb-3">Changes to Terms</h2>
+       <p class="text-slate-600">We may update these terms at any time. Continued use of the site constitutes acceptance of updated terms.</p>
+      </div>
+     </div>
+    </section><!-- DISCLAIMER PAGE -->
+    <section id="page-disclaimer" class="page">
+     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">Disclaimer</h1>
+      <div class="bg-white rounded-2xl shadow-xl p-8 prose prose-slate max-w-none">
+       <div class="bg-amber-50 border border-amber-200 rounded-xl p-6 mb-6">
+        <p class="text-amber-800 font-semibold">⚠️ Important: The information provided by our calculators is for general informational purposes only.</p>
+       </div>
+       <h2 class="text-xl font-bold text-slate-800 mt-6 mb-3">Not Medical Advice</h2>
+       <p class="text-slate-600 mb-4">The calculators and content on this website are not intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
+       <h2 class="text-xl font-bold text-slate-800 mt-6 mb-3">Accuracy of Information</h2>
+       <p class="text-slate-600 mb-4">While we strive to provide accurate calculations based on established formulas, results may vary based on individual circumstances. The formulas used are general guidelines and may not account for all factors affecting your health.</p>
+       <h2 class="text-xl font-bold text-slate-800 mt-6 mb-3">No Guarantees</h2>
+       <p class="text-slate-600 mb-4">We do not guarantee that the information on this site is complete, accurate, or up-to-date. Use of this site is at your own risk.</p>
+       <h2 class="text-xl font-bold text-slate-800 mt-6 mb-3">Professional Consultation</h2>
+       <p class="text-slate-600">Before making any health-related decisions, we strongly recommend consulting with qualified healthcare professionals who can provide personalized advice based on your specific situation.</p>
+      </div>
+     </div>
+    </section>
+   </main><!-- Footer -->
+   <footer class="bg-slate-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="grid md:grid-cols-4 gap-8 mb-8">
+      <div>
+       <div class="flex items-center gap-2 mb-4">
+        <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
+         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+         </svg>
+        </div><span class="text-xl font-bold">Health Calculators Hub</span>
+       </div>
+       <p class="text-slate-400 text-sm">Free, accurate health calculators to help you track and improve your wellness.</p>
+      </div>
+      <div>
+       <h4 class="font-bold mb-4">Calculators</h4>
+       <ul class="space-y-2 text-slate-400 text-sm">
+        <li><a href="#" onclick="navigateTo('bmi')" class="hover:text-teal-400 transition">BMI Calculator</a></li>
+        <li><a href="#" onclick="navigateTo('weight')" class="hover:text-teal-400 transition">Ideal Weight Calculator</a></li>
+        <li><a href="#" onclick="navigateTo('calorie')" class="hover:text-teal-400 transition">Calorie Calculator</a></li>
+        <li><a href="#" onclick="navigateTo('bodyfat')" class="hover:text-teal-400 transition">Body Fat Calculator</a></li>
+        <li><a href="#" onclick="navigateTo('water')" class="hover:text-teal-400 transition">Water Intake Calculator</a></li>
+       </ul>
+      </div>
+      <div>
+       <h4 class="font-bold mb-4">Resources</h4>
+       <ul class="space-y-2 text-slate-400 text-sm">
+        <li><a href="#" onclick="navigateTo('blog')" class="hover:text-teal-400 transition">Health Blog</a></li>
+        <li><a href="#" onclick="navigateTo('about')" class="hover:text-teal-400 transition">About Us</a></li>
+        <li><a href="#" onclick="navigateTo('contact')" class="hover:text-teal-400 transition">Contact</a></li>
+       </ul>
+      </div>
+      <div>
+       <h4 class="font-bold mb-4">Legal</h4>
+       <ul class="space-y-2 text-slate-400 text-sm">
+        <li><a href="#" onclick="navigateTo('privacy')" class="hover:text-teal-400 transition">Privacy Policy</a></li>
+        <li><a href="#" onclick="navigateTo('terms')" class="hover:text-teal-400 transition">Terms of Service</a></li>
+        <li><a href="#" onclick="navigateTo('disclaimer')" class="hover:text-teal-400 transition">Disclaimer</a></li>
+       </ul>
+      </div>
+     </div>
+     <div class="border-t border-slate-800 pt-8 text-center text-slate-400 text-sm">
+      <p>© 2026 healthcalculatorshub.com. All rights reserved.</p>
+      <p class="mt-2">Results are for informational purposes only. Consult a healthcare professional for medical advice.</p>
+     </div>
+    </div>
+   </footer>
+  </div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      site_title: 'Health Calculators Hub',
+      hero_heading: 'Free Health Calculators Online – BMI, Weight, Calories, Body Fat, Water Intake',
+      hero_subheading: 'Track your health easily with these free calculators. Get accurate results instantly.',
+      font_family: 'Plus Jakarta Sans',
+      font_size: 16,
+      background_color: '#f8fafc',
+      surface_color: '#ffffff',
+      text_color: '#1e293b',
+      primary_color: '#0d9488',
+      secondary_color: '#64748b'
+    };
+
+    // Navigation function
+    function navigateTo(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      const targetPage = document.getElementById('page-' + page);
+      if (targetPage) {
+        targetPage.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      // Close mobile menu
+      document.getElementById('mobile-menu').classList.add('hidden');
+    }
+
+    function toggleMobileMenu() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    }
+
+    // BMI Calculator
+    function calculateBMI(e) {
+      e.preventDefault();
+      const height = parseFloat(document.getElementById('bmi-height').value) / 100;
+      const weight = parseFloat(document.getElementById('bmi-weight').value);
+      const bmi = weight / (height * height);
+      
+      let category, color, advice;
+      if (bmi < 18.5) {
+        category = 'Underweight';
+        color = 'text-blue-600 bg-blue-50';
+        advice = 'Consider consulting a nutritionist to develop a healthy weight gain plan.';
+      } else if (bmi < 25) {
+        category = 'Normal Weight';
+        color = 'text-green-600 bg-green-50';
+        advice = 'Great job! Maintain your healthy weight with balanced diet and regular exercise.';
+      } else if (bmi < 30) {
+        category = 'Overweight';
+        color = 'text-yellow-600 bg-yellow-50';
+        advice = 'Consider increasing physical activity and reviewing your diet with a professional.';
+      } else {
+        category = 'Obese';
+        color = 'text-red-600 bg-red-50';
+        advice = 'We recommend consulting a healthcare provider for personalized guidance.';
+      }
+      
+      document.getElementById('bmi-result').innerHTML = `
+        <div class="result-card ${color} rounded-xl p-6">
+          <div class="text-center mb-4">
+            <p class="text-sm font-medium opacity-75">Your BMI</p>
+            <p class="text-5xl font-extrabold">${bmi.toFixed(1)}</p>
+            <p class="text-xl font-semibold mt-2">${category}</p>
+          </div>
+          <p class="text-center opacity-90">${advice}</p>
+        </div>
+      `;
+      document.getElementById('bmi-result').classList.remove('hidden');
+    }
+
+    // Ideal Weight Calculator
+    function calculateIdealWeight(e) {
+      e.preventDefault();
+      const height = parseFloat(document.getElementById('iw-height').value);
+      const gender = document.querySelector('input[name="iw-gender"]:checked').value;
+      const heightInInches = height / 2.54;
+      const baseHeight = 60;
+      
+      let devine, robinson, miller, hamwi;
+      
+      if (gender === 'male') {
+        devine = 50 + 2.3 * (heightInInches - baseHeight);
+        robinson = 52 + 1.9 * (heightInInches - baseHeight);
+        miller = 56.2 + 1.41 * (heightInInches - baseHeight);
+        hamwi = 48 + 2.7 * (heightInInches - baseHeight);
+      } else {
+        devine = 45.5 + 2.3 * (heightInInches - baseHeight);
+        robinson = 49 + 1.7 * (heightInInches - baseHeight);
+        miller = 53.1 + 1.36 * (heightInInches - baseHeight);
+        hamwi = 45.5 + 2.2 * (heightInInches - baseHeight);
+      }
+      
+      const avg = (devine + robinson + miller + hamwi) / 4;
+      const min = Math.min(devine, robinson, miller, hamwi);
+      const max = Math.max(devine, robinson, miller, hamwi);
+      
+      document.getElementById('weight-result').innerHTML = `
+        <div class="result-card bg-emerald-50 rounded-xl p-6">
+          <div class="text-center mb-6">
+            <p class="text-sm font-medium text-emerald-600">Your Ideal Weight Range</p>
+            <p class="text-4xl font-extrabold text-emerald-700">${min.toFixed(1)} - ${max.toFixed(1)} kg</p>
+            <p class="text-lg text-emerald-600 mt-2">Average: ${avg.toFixed(1)} kg</p>
+          </div>
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div class="bg-white rounded-lg p-3 text-center">
+              <p class="font-semibold text-slate-700">Devine</p>
+              <p class="text-emerald-600 font-bold">${devine.toFixed(1)} kg</p>
+            </div>
+            <div class="bg-white rounded-lg p-3 text-center">
+              <p class="font-semibold text-slate-700">Robinson</p>
+              <p class="text-emerald-600 font-bold">${robinson.toFixed(1)} kg</p>
+            </div>
+            <div class="bg-white rounded-lg p-3 text-center">
+              <p class="font-semibold text-slate-700">Miller</p>
+              <p class="text-emerald-600 font-bold">${miller.toFixed(1)} kg</p>
+            </div>
+            <div class="bg-white rounded-lg p-3 text-center">
+              <p class="font-semibold text-slate-700">Hamwi</p>
+              <p class="text-emerald-600 font-bold">${hamwi.toFixed(1)} kg</p>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('weight-result').classList.remove('hidden');
+    }
+
+    // Calorie Calculator
+    function calculateCalories(e) {
+      e.preventDefault();
+      const age = parseFloat(document.getElementById('cal-age').value);
+      const gender = document.querySelector('input[name="cal-gender"]:checked').value;
+      const height = parseFloat(document.getElementById('cal-height').value);
+      const weight = parseFloat(document.getElementById('cal-weight').value);
+      const activity = parseFloat(document.getElementById('cal-activity').value);
+      
+      let bmr;
+      if (gender === 'male') {
+        bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+      } else {
+        bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+      }
+      
+      const tdee = bmr * activity;
+      const loseWeight = tdee - 500;
+      const gainWeight = tdee + 500;
+      
+      document.getElementById('calorie-result').innerHTML = `
+        <div class="result-card bg-orange-50 rounded-xl p-6">
+          <div class="text-center mb-6">
+            <p class="text-sm font-medium text-orange-600">Your Daily Calorie Needs</p>
+            <p class="text-5xl font-extrabold text-orange-700">${Math.round(tdee)}</p>
+            <p class="text-orange-600">calories/day to maintain weight</p>
+          </div>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-lg p-4 text-center">
+              <p class="text-sm text-slate-600 mb-1">Lose Weight</p>
+              <p class="text-2xl font-bold text-red-600">${Math.round(loseWeight)}</p>
+              <p class="text-xs text-slate-500">cal/day</p>
+            </div>
+            <div class="bg-white rounded-lg p-4 text-center border-2 border-orange-300">
+              <p class="text-sm text-slate-600 mb-1">Maintain</p>
+              <p class="text-2xl font-bold text-orange-600">${Math.round(tdee)}</p>
+              <p class="text-xs text-slate-500">cal/day</p>
+            </div>
+            <div class="bg-white rounded-lg p-4 text-center">
+              <p class="text-sm text-slate-600 mb-1">Gain Weight</p>
+              <p class="text-2xl font-bold text-green-600">${Math.round(gainWeight)}</p>
+              <p class="text-xs text-slate-500">cal/day</p>
+            </div>
+          </div>
+          <p class="text-center text-sm text-orange-600 mt-4">BMR (Basal Metabolic Rate): ${Math.round(bmr)} cal/day</p>
+        </div>
+      `;
+      document.getElementById('calorie-result').classList.remove('hidden');
+    }
+
+    // Body Fat Calculator
+    function toggleBFFields() {
+      const gender = document.querySelector('input[name="bf-gender"]:checked').value;
+      const hipField = document.getElementById('bf-hip-field');
+      const hipInput = document.getElementById('bf-hip');
+      
+      if (gender === 'female') {
+        hipField.classList.remove('hidden');
+        hipInput.required = true;
+      } else {
+        hipField.classList.add('hidden');
+        hipInput.required = false;
+      }
+    }
+
+    function calculateBodyFat(e) {
+      e.preventDefault();
+      const gender = document.querySelector('input[name="bf-gender"]:checked').value;
+      const height = parseFloat(document.getElementById('bf-height').value);
+      const neck = parseFloat(document.getElementById('bf-neck').value);
+      const waist = parseFloat(document.getElementById('bf-waist').value);
+      
+      let bodyFat;
+      let category, color;
+      
+      if (gender === 'male') {
+        bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
+        
+        if (bodyFat < 6) { category = 'Essential Fat'; color = 'text-blue-600 bg-blue-50'; }
+        else if (bodyFat < 14) { category = 'Athletes'; color = 'text-green-600 bg-green-50'; }
+        else if (bodyFat < 18) { category = 'Fitness'; color = 'text-teal-600 bg-teal-50'; }
+        else if (bodyFat < 25) { category = 'Average'; color = 'text-yellow-600 bg-yellow-50'; }
+        else { category = 'Obese'; color = 'text-red-600 bg-red-50'; }
+      } else {
+        const hip = parseFloat(document.getElementById('bf-hip').value);
+        bodyFat = 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(height)) - 450;
+        
+        if (bodyFat < 14) { category = 'Essential Fat'; color = 'text-blue-600 bg-blue-50'; }
+        else if (bodyFat < 21) { category = 'Athletes'; color = 'text-green-600 bg-green-50'; }
+        else if (bodyFat < 25) { category = 'Fitness'; color = 'text-teal-600 bg-teal-50'; }
+        else if (bodyFat < 32) { category = 'Average'; color = 'text-yellow-600 bg-yellow-50'; }
+        else { category = 'Obese'; color = 'text-red-600 bg-red-50'; }
+      }
+      
+      document.getElementById('bodyfat-result').innerHTML = `
+        <div class="result-card ${color} rounded-xl p-6">
+          <div class="text-center">
+            <p class="text-sm font-medium opacity-75">Your Body Fat Percentage</p>
+            <p class="text-5xl font-extrabold">${bodyFat.toFixed(1)}%</p>
+            <p class="text-xl font-semibold mt-2">${category}</p>
+          </div>
+        </div>
+      `;
+      document.getElementById('bodyfat-result').classList.remove('hidden');
+    }
+
+    // Water Intake Calculator
+    function calculateWater(e) {
+      e.preventDefault();
+      const weight = parseFloat(document.getElementById('water-weight').value);
+      const activity = parseFloat(document.getElementById('water-activity').value);
+      const climate = parseFloat(document.getElementById('water-climate').value);
+      
+      const baseWater = weight * 0.033;
+      const adjustedWater = baseWater * activity * climate;
+      const glasses = Math.round(adjustedWater / 0.25);
+      
+      document.getElementById('water-result').innerHTML = `
+        <div class="result-card bg-blue-50 rounded-xl p-6">
+          <div class="text-center mb-4">
+            <p class="text-sm font-medium text-blue-600">Your Daily Water Intake</p>
+            <p class="text-5xl font-extrabold text-blue-700">${adjustedWater.toFixed(1)} L</p>
+            <p class="text-blue-600 mt-2">That's about ${glasses} glasses of water</p>
+          </div>
+          <div class="flex justify-center gap-1 flex-wrap mt-4">
+            ${Array(Math.min(glasses, 12)).fill('💧').join('')}
+            ${glasses > 12 ? `<span class="text-blue-600 font-bold ml-2">+${glasses - 12} more</span>` : ''}
+          </div>
+          <div class="mt-6 bg-white rounded-lg p-4">
+            <p class="text-sm text-slate-600 text-center">
+              <strong>Tip:</strong> Spread your water intake throughout the day. Drink a glass when you wake up and before each meal!
+            </p>
+          </div>
+        </div>
+      `;
+      document.getElementById('water-result').classList.remove('hidden');
+    }
+
+    // Contact Form
+    function submitContact(e) {
+      e.preventDefault();
+      document.getElementById('contact-form').reset();
+      document.getElementById('contact-success').classList.remove('hidden');
+      setTimeout(() => {
+        document.getElementById('contact-success').classList.add('hidden');
+      }, 5000);
+    }
+
+    // Initialize Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          document.getElementById('site-title').textContent = config.site_title || defaultConfig.site_title;
+          document.getElementById('hero-heading').textContent = config.hero_heading || defaultConfig.hero_heading;
+          document.getElementById('hero-subheading').textContent = config.hero_subheading || defaultConfig.hero_subheading;
+          
+          const fontFamily = config.font_family || defaultConfig.font_family;
+          document.body.style.fontFamily = `${fontFamily}, sans-serif`;
+          
+          const fontSize = config.font_size || defaultConfig.font_size;
+          document.body.style.fontSize = `${fontSize}px`;
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => { config.background_color = value; window.elementSdk.setConfig({ background_color: value }); }
+            },
+            {
+              get: () => config.surface_color || defaultConfig.surface_color,
+              set: (value) => { config.surface_color = value; window.elementSdk.setConfig({ surface_color: value }); }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => { config.text_color = value; window.elementSdk.setConfig({ text_color: value }); }
+            },
+            {
+              get: () => config.primary_color || defaultConfig.primary_color,
+              set: (value) => { config.primary_color = value; window.elementSdk.setConfig({ primary_color: value }); }
+            },
+            {
+              get: () => config.secondary_color || defaultConfig.secondary_color,
+              set: (value) => { config.secondary_color = value; window.elementSdk.setConfig({ secondary_color: value }); }
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => { config.font_family = value; window.elementSdk.setConfig({ font_family: value }); }
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => { config.font_size = value; window.elementSdk.setConfig({ font_size: value }); }
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['site_title', config.site_title || defaultConfig.site_title],
+          ['hero_heading', config.hero_heading || defaultConfig.hero_heading],
+          ['hero_subheading', config.hero_subheading || defaultConfig.hero_subheading]
+        ])
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d953fec76fe2704',t:'MTc3MzAwODY2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
